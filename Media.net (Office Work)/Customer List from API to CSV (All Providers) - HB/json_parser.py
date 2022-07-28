@@ -30,14 +30,14 @@ with open(csv_customer_list, 'rt') as csvfile:
 
 
 with open(csv_final, 'w') as csvfinal:
-    
+
     writer = csv.writer(csvfinal, delimiter=',', lineterminator='\n')
-    
+
     print ('Writing data into final csv - customer_mapping.csv')
 
     writer.writerow(['HB Customer ID','Product Type ID', 'Provider ID','External Publisher Code'])
-    
-    for i in range(0, len(customer_list)):
+
+    for i in range(len(customer_list)):
         try:
             print (i)
             response = requests.get(request_list[i])

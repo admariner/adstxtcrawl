@@ -44,7 +44,7 @@ def main():
     url = "https://reportdata.mytestsite.com/transactionSearch.jsp"
     driver = webdriver.Chrome(r"C:\Users\sidde\Downloads\chromedriver_win32\chromedriver.exe")
     driver.get(url)
-    
+
     #div_elements = driver.find_elements_by_tag_name('span')
     #ria_rate = [link.get_attribute('href') for link in links]
 

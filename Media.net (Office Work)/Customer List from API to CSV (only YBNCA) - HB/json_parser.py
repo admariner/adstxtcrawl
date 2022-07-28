@@ -33,7 +33,7 @@ ybnca_mapping_error_count = 0
 
 csv_read_start_time = time.time()
 with open(csv_customer_list, 'rb') as csvfile:
-	
+
 	print ('Reading Customers from csv - customer_list.csv')
 
 	reader = csv.reader(csvfile)
@@ -52,15 +52,15 @@ with open(csv_final, 'w') as csvfinal:
 	print ('Writing data into final csv - customer_mapping.csv')
 
 	writer.writerow(['HB Customer ID','Product Type ID','YBNCA Customer ID'])
-	
-	for i in range(0, len(customer_list)):
+
+	for i in range(len(customer_list)):
 		print (i)
 		api_request_start_time = time.time()
 		try:
 			response = requests.get(request_list[i])#, headers=myheaders)
 
 		except requests.exceptions.RequestException as e:
-	    	
+
 			logging.warning(e)
 			print ('Error Block')
 			writer.writerow([customer_list[i], product_list[i], 'API Failure'])
@@ -69,7 +69,7 @@ with open(csv_final, 'w') as csvfinal:
 
 		api_request_end_time = time.time()
 		api_request_total_time += api_request_end_time - api_request_start_time
-		
+
 		a = json.loads(response.text)	
 
 		try:
@@ -79,7 +79,7 @@ with open(csv_final, 'w') as csvfinal:
 			ybnca_mapping_error_count += 1		
 
 csv_write_end_time = time.time()		
-	
+
 print ('Writing of Data - Done!')
 print ('Total Records: {num_records}'.format(num_records=len(customer_list)))
 print ('Time taken to Read from CSV: {csv_read_time}'.format(csv_read_time= csv_read_end_time-csv_read_start_time))

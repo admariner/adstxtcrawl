@@ -29,13 +29,13 @@ def bot():
 
                 if 'exit' in transcript.lower() or 'quit' in transcript.lower():
                     exit()
-                
+
                 if 'declare' in transcript.lower() or 'variable' in transcript.lower() or 'with value' in transcript.lower():
                     variable = transcript.split('variable', 1)[1]
                     value = transcript.split("value", 1)[0]
-                    transcript = '{} = {}'.format(variable, value)
+                    transcript = f'{variable} = {value}'
 
-            
+
                 file.write(transcript)
                 file.write('\n')
 
