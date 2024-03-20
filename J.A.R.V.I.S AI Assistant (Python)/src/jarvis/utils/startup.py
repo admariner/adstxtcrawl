@@ -37,29 +37,29 @@ def start_up(self):
     print ('JARVIS is starting.')
     print ('performing initial checks...')
     self.check_internet_connection()
-    for i in range (5):
+    for _ in range (5):
         print ('.', sep=' ', end=' ', flush=True)
         time.sleep(1)
 
     time.sleep(1.5)
-    
+
     self.clear_console()
-    
+
     print ('\n' + JARVIS_LOGO)
     print ('Note: CTRL + C If you want to Exit.')
 
     print ('------------System Information------------')
     #CPU
-    print ('Operation System: ' + platform.system() + ' ' + platform.release())
-    print ('Processor: ' + platform.processor())
-    print ('Architecture: ' + platform.machine())
-    print ('CPU Count: ' + str(psutil.cpu_count()))
+    print(f'Operation System: {platform.system()} {platform.release()}')
+    print(f'Processor: {platform.processor()}')
+    print(f'Architecture: {platform.machine()}')
+    print(f'CPU Count: {str(psutil.cpu_count())}')
     #Memory 
     # (https://github.com/giampaolo/psutil/blob/master/scripts/disk_usage.py)
     # https://github.com/giampaolo/psutil/blob/1626bae30349627e4d0a25ac9fb4cf3a743b94e7/psutil/_common.py#L730
-    print ('Total Memory: ' + str(psutil.virtual_memory().total/1000000) + ' GB')
-    print ('Available Memory: ' + str(psutil.virtual_memory().available/1000000) + ' GB')
-    print ('Available Percent: ' + str(psutil.virtual_memory().percent) + ' %')
+    print(f'Total Memory: {str(psutil.virtual_memory().total/1000000)} GB')
+    print(f'Available Memory: {str(psutil.virtual_memory().available/1000000)} GB')
+    print(f'Available Percent: {str(psutil.virtual_memory().percent)} %')
     #print (psutil.virtual_memory())
     #Disk
     #print (psutil.disk_usage('/'))

@@ -43,7 +43,7 @@ def load_url_queue(csv_domain_list, domain_queue):
 
 
 def storing_data_to_database (connection, domain_queue):
-    
+
     row_count = 0
 
     myheaders = {
@@ -56,7 +56,7 @@ def storing_data_to_database (connection, domain_queue):
     domain_queue = set(domain_queue.values())
 
     for domain in domain_queue:
-        
+
         current_url = 'http://{host}/ads.txt'.format(host=domain)
         print (current_url)
 
@@ -119,14 +119,12 @@ def storing_data_to_database (connection, domain_queue):
 
 def processing_row_to_database(connection, data_row, comment, domain_name, line_number):
 
-    insert_stmt = "INSERT INTO ads_txt (domain_name, advertiser_domain, publisher_id, account_type, cert_authority_id, line_number, raw_string) VALUES (?,?,?,?,?,?,?);"
     #(domain_name,advertiser_domain,publisher_id, account_type,cert_authority_id,line_number,is_valid_syntax,raw_string) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
 
     domain_name       = domain_name
     advertiser_domain = ''
     publisher_id      = ''
     account_type      = ''
-    cert_authority_id = ''
     raw_string        = ','.join(data_row)
 
     if len(data_row) >= 3:
@@ -134,9 +132,7 @@ def processing_row_to_database(connection, data_row, comment, domain_name, line_
         publisher_id       = data_row[1].lower()
         account_type       = data_row[2].lower()
 
-    if len(data_row) == 4:
-        cert_authority_id  = data_row[3].lower()
-
+    cert_authority_id = data_row[3].lower() if len(data_row) == 4 else ''
     #data validation
     data_valid = 1
 
@@ -157,9 +153,10 @@ def processing_row_to_database(connection, data_row, comment, domain_name, line_
     if(len(account_type) < 6):
         data_valid = 0
 
-    if(data_valid > 0):
+    if (data_valid > 0):
         # Insert a row of data using bind variables (protect against sql injection)
         c = connection.cursor()
+        insert_stmt = "INSERT INTO ads_txt (domain_name, advertiser_domain, publisher_id, account_type, cert_authority_id, line_number, raw_string) VALUES (?,?,?,?,?,?,?);"
         c.execute(insert_stmt, (domain_name, advertiser_domain, publisher_id, account_type, cert_authority_id, line_number, raw_string,))
 
 
@@ -168,9 +165,9 @@ def processing_row_to_database(connection, data_row, comment, domain_name, line_
             if not data:
                 connection.commit()
         except sqlite3.Error as e:
-            print("Database error: %s" % (' '.join(e.args)))
+            print(f"Database error: {' '.join(e.args)}")
         except Exception as e:
-            print("Exception in _query: %s" % e)
+            print(f"Exception in _query: {e}")
 
         # Save (commit) the changes
         connection.commit()
@@ -179,7 +176,7 @@ def processing_row_to_database(connection, data_row, comment, domain_name, line_
     return 0
 
 
-def error_log (connection, domain_name, data_row, comment, line_number, error_message):
+def error_log(connection, domain_name, data_row, comment, line_number, error_message):
     insert_stmt = "INSERT INTO ads_txt_error_logs (domain_name, error_message) VALUES (?,?);"
     c = connection.cursor()
     c.execute(insert_stmt, (domain_name, error_message,))
@@ -189,15 +186,14 @@ def error_log (connection, domain_name, data_row, comment, line_number, error_me
         if not data:
             connection.commit()
     except sqlite3.Error as e:
-        print("Database error: %s" % (' '.join(e.args)))
+        print(f"Database error: {' '.join(e.args)}")
     except Exception as e:
-        print("Exception in _query: %s" % e)
-    
+        print(f"Exception in _query: {e}")
+
     #(1,domain_name,advertiser_domain,publisher_id, account_type,cert_authority_id,1,1,data_row,datetime.now(),datetime.now()))
 
     # Save (commit) the changes
     connection.commit()
-    pass
 
 
 
@@ -223,7 +219,7 @@ total_domain_count = load_url_queue(csv_domain_list ,domain_queue)
 if total_domain_count > 0:
     connection = sqlite3.connect('test.db')
     print ('Database Connected')
-    
+
 with connection:
     #create_stmt = "create table ads_txt (        row_id integer NOT NULL PRIMARY KEY AUTOINCREMENT, domain_name varchar(100) NOT NULL,        advertiser_domain varchar(100),        publisher_id int(50),        account_type varchar(100),        cert_authority_id varchar(100),        line_number int(10),        is_valid_syntax tinyint(1) DEFAULT 0,        raw_string varchar(200),        creation_date datetime DEFAULT CURRENT_TIMESTAMP,        updation_date datetime DEFAULT CURRENT_TIMESTAMP    );"
     #c = connection.cursor()
@@ -235,11 +231,11 @@ with connection:
 
 connection.close()
 print ('Database Connection Closed.')       
-    
+
 end_time = time.time()
 
-print ('Total Number of Domains: ' + str(total_domain_count))
-print ('Total Number of Entries Added: ' + str(valid_domain_count)) 
-print ('Start Time: ' + time.asctime( time.localtime(start_time)))
-print ('End Time: ' + time.asctime( time.localtime(end_time)))
-print ('Total Time Taken: ' + str(end_time-start_time))
+print(f'Total Number of Domains: {str(total_domain_count)}')
+print(f'Total Number of Entries Added: {str(valid_domain_count)}')
+print(f'Start Time: {time.asctime(time.localtime(start_time))}')
+print(f'End Time: {time.asctime(time.localtime(end_time))}')
+print(f'Total Time Taken: {str(end_time-start_time)}')

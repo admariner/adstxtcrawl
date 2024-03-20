@@ -47,15 +47,15 @@ class DateTime:
 			if quarter == 45:
 				return self.SpeakText("It is quarter to midnight")
 
-		elif hour == 12 :
-			if quarter == 15 :
-				return self.SpeakText("It is quarter past "+ str(hour))
+		elif hour == 12:
+			if quarter == 15:
+				return self.SpeakText(f"It is quarter past {str(hour)}")
 			if quarter == 30:
-				return self.SpeakText("It is half past"+ str(hour))
+				return self.SpeakText(f"It is half past{str(hour)}")
 			if quarter == 45:
-				return self.SpeakText("It is quarter to"+ str(hour))
+				return self.SpeakText(f"It is quarter to{str(hour)}")
 		else:
-			return self.SpeakText("It is" + str(time))
+			return self.SpeakText(f"It is{str(time)}")
 
 
 #function for getting the timezones
@@ -69,41 +69,28 @@ class DateTime:
 
 		print(cmd)
 
-		if "utc" or "UTC" in cmd:
-			self.SpeakText(self.UTC())
-		elif "PST" or "pst" in cmd:
-			self.SpeakText(self.PST())
-		elif "EST" or "est" in cmd:
-			self.SpeakText(self.EST())
-		elif "IST" or "ist" in cmd:
-			self.SpeakText(self.IST())
-		else:
-			self.SpeakText("Your options are UTC, ST, EST and PST only")
+		self.SpeakText(self.UTC())
 
 
 	def UTC(self):
-		UTC = pytz.utc 
-		datetime_utc = datetime.datetime.now(UTC).strftime("%H:%M")
+		UTC = pytz.utc
 		# print(datetime_utc)
-		return datetime_utc
+		return datetime.datetime.now(UTC).strftime("%H:%M")
 
 	def PST(self):
 		PST = pytz.timezone('US/Pacific')
-		datetime_pst = datetime.datetime.now(PST).strftime("%H:%M")
 		# print(datetime_pst)
-		return datetime_pst
+		return datetime.datetime.now(PST).strftime("%H:%M")
 
 	def EST(self):
 		EST = pytz.timezone('America/New_York')
-		datetime_est = datetime.datetime.now(EST).strftime("%H:%M")
 		# print(datetime_est)
-		return datetime_est
+		return datetime.datetime.now(EST).strftime("%H:%M")
 
 	def IST(self):
-		IST = pytz.timezone('Asia/Kolkata') 
-		datetime_ist = datetime.datetime.now(IST).strftime("%H:%M")
+		IST = pytz.timezone('Asia/Kolkata')
 		# print(datetime_ist)
-		return datetime_ist
+		return datetime.datetime.now(IST).strftime("%H:%M")
 
 
 # Function to convert text to speech 

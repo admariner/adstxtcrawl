@@ -9,18 +9,10 @@ def get_news():
     news = soup.select('#MainContent > div:nth-child(2) > div > div > div:nth-child(6) > div.PageBuilder-col-6.PageBuilder-col')[0]
     links = news.find_all('a')
 
-    headlines = []
-    for link in links:
-        if len(link.text) > 30:
-            headlines.append(link.text)
-
-    hrefs = []
-    for link in links:
-        if len(link.text) > 30:
-            hrefs.append(link['href'])
-
+    headlines = [link.text for link in links if len(link.text) > 30]
+    hrefs = [link['href'] for link in links if len(link.text) > 30]
     top5 = "Here's your latest finance news articles:\n"
-    for i in range(0, 5):
+    for i in range(5):
         top5 += headlines[i] + "\n" + hrefs[i] + "\n"
     return top5
 
@@ -30,21 +22,15 @@ def get_quantstart_articles():
     soup = BeautifulSoup(res.text, "html.parser")
     posts = soup.select("body > div > section.mb-2 > div")[0]
 
-    lines = []
-    for post in posts.findAll('p')[:10]:
-        lines.append(post.text)
-
-    hrefs = []
-    for href in posts.findAll('a')[:10]:
-        hrefs.append(href['href'])
-
+    lines = [post.text for post in posts.findAll('p')[:10]]
+    hrefs = [href['href'] for href in posts.findAll('a')[:10]]
     links = []
     for href in hrefs:
-        link = 'https://www.quantstart.com' + href
+        link = f'https://www.quantstart.com{href}'
         links.append(link)
 
     top10 = "Here's the top 10 articles from Quantstart Systematic Trading:\n"
-    for i in range(0, 10):
+    for i in range(10):
         top10 += lines[i] + "\n" + links[i] + "\n"
     return top10
 

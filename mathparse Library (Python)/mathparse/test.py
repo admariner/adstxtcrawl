@@ -47,10 +47,10 @@ def replace_word_tokens(string, language):
     word_matches = find_word_groups(string, list(scales.keys()))
 
     for match in word_matches:
-        string = string.replace(match, '(' + match + ')')
+        string = string.replace(match, f'({match})')
 
     for scale in list(scales.keys()):
-        for _ in range(0, string.count(scale)):
+        for _ in range(string.count(scale)):
             start_index = string.find(scale) - 1
             end_index = len(string)
 
@@ -64,11 +64,8 @@ def replace_word_tokens(string, language):
             if string[end_index] in end_index_characters:
                 add = ''
 
-            string = string[:start_index] + '(' + string[start_index:]
-            string = string.replace(
-                scale, '* ' + str(scales[scale]) + ')' + add,
-                1
-            )
+            string = f'{string[:start_index]}({string[start_index:]}'
+            string = string.replace(scale, f'* {str(scales[scale])}){add}', 1)
 
     string = string.replace(') (', ') + (')
 
@@ -91,8 +88,7 @@ def find_word_groups(string, words):
         r')*\s*)+(?:\d+|' +
         scale_pattern + r')+'
     )
-    result = regex.findall(string)
-    return result
+    return regex.findall(string)
 
 
 
@@ -108,7 +104,7 @@ def tokenize(string, language=None, escape='___'):
     # Ignore punctuation
     if len(string) and not string[-1].isalnum():
         character = string[-1]
-        string = string[:-1] + ' ' + character
+        string = f'{string[:-1]} {character}'
 
     # Parenthesis must have space around them to be tokenized properly
     string = string.replace('(', ' ( ')
@@ -210,9 +206,7 @@ def evaluate_postfix(tokens):
                 else:
                     total = Decimal(str(a)) / Decimal(str(b))
             else:
-                raise PostfixTokenEvaluationException(
-                    'Unknown token {}'.format(token)
-                )
+                raise PostfixTokenEvaluationException(f'Unknown token {token}')
 
         if total is not None:
             stack.append(total)
